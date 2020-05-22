@@ -19,6 +19,8 @@ public class MyWordCount
     public static class MyWordCountMapper
 	extends Mapper<Object, Text, Object, Text>
     {
+		private String[] symbols = {".", ",", ":", ";"};
+		private String raw_word = "";
 		private Text word = new Text();
 		private Text frequency = new Text();
 		
@@ -30,7 +32,14 @@ public class MyWordCount
 
 			while(iterator.hasMoreTokens())
             {
-				word.set(iterator.nextToken()); // "cafe"
+				raw_word = iterator.nextToken();
+
+				for (int i = 0; i < symbols.length; i++)
+				{
+					raw_word = raw_word.replace(symbols[i], "");
+				}
+
+				word.set(raw_word); // "cafe"
 				frequency.set("1"); // "1"
 				
 				context.write(word, frequency); // <key, value>  =  <word, frequency>  =  <"cafe", "1">
